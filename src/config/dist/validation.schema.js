@@ -1,0 +1,15 @@
+"use strict";
+exports.__esModule = true;
+exports.validationSchema = void 0;
+var Joi = require("joi");
+exports.validationSchema = Joi.object({
+    NODE_ENV: Joi.string().valid('development', 'production').required(),
+    NODE_NETWORK: Joi.string().valid('localhost', 'remote').required(),
+    PORT: Joi.number()["default"](3000),
+    DB_TYPE: Joi.string()["default"]('postgres').required(),
+    DB_HOST: Joi.string().required(),
+    DB_PORT: Joi.number()["default"](5432),
+    DB_USERNAME: Joi.string().required(),
+    DB_PASSWORD: Joi.string().required(),
+    DB_NAME: Joi.string().required()
+});
