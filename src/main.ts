@@ -1,42 +1,41 @@
+// src/main.ts
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import session from 'express-session';
-import { RedisStore } from 'connect-redis';
-import Redis from 'ioredis';
-import { EnvConfig } from '../src/config/env.config';
+import { EnvConfig } from './config/env.config';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  try {
+    const app = await NestFactory.create(AppModule, {
+      bufferLogs: true,   // 초기 로그 누락 방지
+    });
 
-  const config = app.get(EnvConfig);
+    const config = app.get(EnvConfig);
 
+    // 로거 레벨
+    app.useLogger(
+      config.NODE_NETWORK === 'localhost'
+        ? ['error', 'warn', 'log', 'debug']
+        : ['error'],
+    );
 
-  const redis_client = new Redis({
-    host: config.NODE_NETWORK == 'localhost'
-      ? config.REDIS_LOCAL
-      : config.REDIS_REMOTE,
-    port: config.REDIS_PORT,
-    password: config.REDIS_PASSWORD,
-  });
+    // 글로벌 파이프(DTO 안전)
+    app.useGlobalPipes(new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }));
 
-  app.use(
-    session({
-      store: new RedisStore({
-        client: redis_client,
-        prefix: "session:",
-        ttl: 60 * 60 * 2, // 2시간
-      }),
-      secret: config.SESSION_SECRET,
-      resave: false,
-      saveUninitialized: false,
-      cookie: {
-        httpOnly: true,
-        secure: config.NODE_ENV === 'production',
-        maxAge: 1000 * 60 * 60 * 2, // 2tlrks
-      },
-    }),
-  );
+    // (선택) 글로벌 프리픽스
+    // app.setGlobalPrefix('api');
 
-  await app.listen(config.PORT);
+    // 서버 리슨
+    const port = Number(config.PORT ?? 3000);
+    await app.listen(port, '0.0.0.0');
+    console.log(`✅ Listening on ${await app.getUrl()}`);
+  } catch (error) {
+    console.error('❌ Fatal bootstrap error:', error);
+    process.exit(1);
+  }
 }
 bootstrap();

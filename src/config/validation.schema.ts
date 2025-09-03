@@ -12,4 +12,15 @@ export const validationSchema = Joi.object({
     DB_PASSWORD: Joi.string().required(),
     DB_NAME: Joi.string().required(),
 
+    SESSION_SECRET: Joi.string().required(),
+    EMAIL_SERVICE: Joi.string().required(),
+    EMAIL_HOST: Joi.string().required(),
+    EMAIL_PORT: Joi.number().required(),
+    EMAIL_USER: Joi.string().required(),
+    EMAIL_PASSWORD: Joi.string().required(),
+
+    SMS_API_KEY: Joi.string().required(),
+    SMS_API_SECRET: Joi.string().required(),
+    SENDER_PHONE: Joi.string().required(),
+
 });

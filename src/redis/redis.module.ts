@@ -1,24 +1,13 @@
-import { Module } from "@nestjs/common";
-import { RedisModule as IORedisModule } from '@nestjs-modules/ioredis';
-import { EnvConfig } from '../config/env.config';
+// redis.module.ts
+import { Module } from '@nestjs/common';
+// ✅ 여기의 ConfigModule은 너의 커스텀 모듈 경로
+import { ConfigModule } from 'src/config/config.module';
+import { RedisService } from './redis.service';
 
 @Module({
-    imports: [
-        IORedisModule.forRootAsync({
-            inject: [EnvConfig],
-            useFactory: (config: EnvConfig) => ({
-                type: 'single',
-                options: {
-                    host: config.NODE_NETWORK === 'localhost' 
-                    ? config.REDIS_LOCAL
-                    : config.REDIS_REMOTE,
-                    port: config.REDIS_PORT,
-                    password: config.REDIS_PASSWORD,
-                },
-            }),
-        })
-    ],
-    exports: [IORedisModule],
+    imports: [ConfigModule],          // ✅ EnvConfig를 이 모듈에서 “가져오기”
+    providers: [RedisService],        // ❌ EnvConfig를 여기서 다시 providers에 넣지 말기
+    exports: [RedisService],
 })
-
-export class RedisModule {}
+export class RedisModule { }
+// 

@@ -7,8 +7,8 @@ import {
 
 
 export enum DBType {
-  POSTGRES = 'postgres',
-  MYSQL = 'mysql',
+    POSTGRES = 'postgres',
+    MYSQL = 'mysql',
 }
 
 @Injectable()
@@ -69,20 +69,58 @@ export class EnvConfig {
         return this.getString('DB_NAME');
     }
 
-    get REDIS_REMOTE(): string{
+    get REDIS_REMOTE(): string {
         return this.getString('REDIS_REMOTE');
     }
-    get REDIS_LOCAL(): string{
+    get REDIS_LOCAL(): string {
         return this.getString('REDIS_LOCAL');
     }
-    get REDIS_PORT(): number{
+    get REDIS_PORT(): number {
         return this.getNumber('REDIS_PORT');
     }
-    get REDIS_PASSWORD(): string{
+    get REDIS_PASSWORD(): string {
         return this.getString('REDIS_PASSWORD');
     }
 
-    get SESSION_SECRET(): string{
+    get SESSION_SECRET(): string {
         return this.getString('SESSION_SECRET');
+    }
+
+    get EMAIL_SERVICE(): string {
+        return this.getString('EMAIL_SERVICE');
+    }
+    get EMAIL_HOST(): string {
+        return this.getString('EMAIL_HOST');
+    }
+    get EMAIL_PORT(): number {
+        return this.getNumber('EMAIL_PORT');
+    }
+    get EMAIL_USER(): string {
+        return this.getString('EMAIL_USER');
+    }
+    get EMAIL_PASSWORD(): string {
+        return this.getString('EMAIL_PASSWORD');
+    }
+
+    get SMS_API_KEY(): string {
+        return this.getString('SMS_API_KEY');
+    }
+    get SMS_API_SECRET(): string {
+        return this.getString('SMS_API_SECRET');
+    }
+    get SENDER_PHONE(): string {
+        return this.getString('SENDER_PHONE');
+    }
+
+    get ALIGO_API_KEY(): string {
+        return this.getString('ALIGO_API_KEY');
+    }
+
+    get ALIGO_USER_ID(): string {
+        return this.getString('ALIGO_USER_ID');
+    }
+
+    get JWT_SECRET(): string {
+        return this.getString('JWT_SECRET');
     }
 }
